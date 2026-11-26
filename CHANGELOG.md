@@ -2,6 +2,10 @@
 
 Este archivo es la memoria viva del repositorio. Registra cada hito, decisión técnica y entregable realizado.
 
+## [0.4.0] - 2026-11-26 (`feature/frontend-monaco-d3`)
+### Added
+- `frontend/index.html`, `styles.css`, `app.js`: Interfaz `.SQL-BI` con Monaco Editor (autocompletado dinámico desde `information_schema`), validación en tiempo real, biblioteca de templates parametrizables, versionado con rollback, gestión de alertas y gráficos interactivos con D3.js (barras/líneas).
+
 ## [0.3.0] - 2026-11-26 (`feature/backend-sql-bi`)
 ### Added
 - `backend/src/sqlValidator.js`: Parser SQL con `node-sql-parser` (PostgreSQL) en modo solo lectura obligatorio (bloquea `DROP`, `DELETE`, `UPDATE`, `INSERT`, etc.) y renderizador seguro de templates `{{variable}}`.
