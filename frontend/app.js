@@ -87,7 +87,19 @@ function getTemplateParams() {
   return params;
 }
 
+function showError(msg) {
+  const banner = document.getElementById('error-banner');
+  if (!msg) {
+    banner.classList.add('hidden');
+    banner.textContent = '';
+    return;
+  }
+  banner.textContent = msg;
+  banner.classList.remove('hidden');
+}
+
 async function executeQuery() {
+  showError(null);
   const sql = editor.getValue();
   const params = getTemplateParams();
   const res = await fetch('/api/query/execute', {
@@ -97,14 +109,41 @@ async function executeQuery() {
   });
   const data = await res.json();
   if (!res.ok) {
-    alert(data.error);
+    showError(data.error);
     return;
   }
   lastResult = data;
   document.getElementById('exec-time').textContent = `${data.executionTimeMs} ms`;
   document.getElementById('row-count').textContent = `${data.rowCount} filas`;
+  renderKPIs(data.columns, data.rows);
   renderTable(data.columns, data.rows);
   renderD3Chart();
+}
+
+function renderKPIs(columns, rows) {
+  const kpiBox = document.getElementById('kpi-cards');
+  if (!rows.length) {
+    kpiBox.classList.add('hidden');
+    return;
+  }
+  const numCol = columns.find(c => !isNaN(Number(rows[0][c])));
+  if (!numCol) {
+    kpiBox.classList.add('hidden');
+    return;
+  }
+  const vals = rows.map(r => Number(r[numCol]) || 0);
+  const sum = vals.reduce((a, b) => a + b, 0);
+  const avg = sum / vals.length;
+  const max = Math.max(...vals);
+  const fmt = (n) => n.toLocaleString('es-PE', { maximumFractionDigits: 2 });
+
+  kpiBox.innerHTML = `
+    <div class="kpi-card"><div class="kpi-label">Registros</div><div class="kpi-value">${rows.length}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Suma (${numCol})</div><div class="kpi-value">${fmt(sum)}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Promedio (${numCol})</div><div class="kpi-value">${fmt(avg)}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Máximo (${numCol})</div><div class="kpi-value">${fmt(max)}</div></div>
+  `;
+  kpiBox.classList.remove('hidden');
 }
 
 function renderTable(columns, rows) {
@@ -139,16 +178,37 @@ function renderD3Chart() {
   svg.append('g').attr('transform', `translate(0,${height - margin.bottom})`).call(d3.axisBottom(x)).selectAll('text').attr('fill', '#cbd5e1');
   svg.append('g').attr('transform', `translate(${margin.left},0)`).call(d3.axisLeft(y)).selectAll('text').attr('fill', '#cbd5e1');
 
+  const tooltip = d3.select('#d3-tooltip');
+
   if (chartType === 'bar') {
     svg.selectAll('rect').data(rows).enter().append('rect')
       .attr('x', d => x(String(d[labelCol])))
       .attr('y', d => y(Number(d[valueCol])))
       .attr('width', x.bandwidth())
       .attr('height', d => height - margin.bottom - y(Number(d[valueCol])))
-      .attr('fill', '#3b82f6');
+      .attr('fill', '#3b82f6')
+      .on('mousemove', (event, d) => {
+        tooltip.classed('hidden', false)
+          .style('left', `${event.clientX + 12}px`)
+          .style('top', `${event.clientY - 28}px`)
+          .html(`<strong>${d[labelCol]}</strong><br>${valueCol}: ${Number(d[valueCol]).toLocaleString('es-PE')}`);
+      })
+      .on('mouseleave', () => tooltip.classed('hidden', true));
   } else {
     const line = d3.line().x(d => x(String(d[labelCol])) + x.bandwidth() / 2).y(d => y(Number(d[valueCol])));
     svg.append('path').datum(rows).attr('fill', 'none').attr('stroke', '#10b981').attr('stroke-width', 2.5).attr('d', line);
+    svg.selectAll('circle').data(rows).enter().append('circle')
+      .attr('cx', d => x(String(d[labelCol])) + x.bandwidth() / 2)
+      .attr('cy', d => y(Number(d[valueCol])))
+      .attr('r', 4.5)
+      .attr('fill', '#10b981')
+      .on('mousemove', (event, d) => {
+        tooltip.classed('hidden', false)
+          .style('left', `${event.clientX + 12}px`)
+          .style('top', `${event.clientY - 28}px`)
+          .html(`<strong>${d[labelCol]}</strong><br>${valueCol}: ${Number(d[valueCol]).toLocaleString('es-PE')}`);
+      })
+      .on('mouseleave', () => tooltip.classed('hidden', true));
   }
 }
 
@@ -234,7 +294,35 @@ async function loadAlerts() {
 }
 
 document.getElementById('btn-run').onclick = executeQuery;
+document.getElementById('btn-run-business').onclick = executeQuery;
 document.getElementById('chart-type').onchange = renderD3Chart;
+
+document.getElementById('btn-mode-analyst').onclick = () => {
+  document.getElementById('btn-mode-analyst').classList.add('active');
+  document.getElementById('btn-mode-business').classList.remove('active');
+  document.getElementById('editor-wrapper').classList.remove('hidden');
+  document.getElementById('business-banner').classList.add('hidden');
+  document.querySelectorAll('.analyst-only').forEach(el => el.classList.remove('hidden'));
+};
+
+document.getElementById('btn-mode-business').onclick = () => {
+  document.getElementById('btn-mode-business').classList.add('active');
+  document.getElementById('btn-mode-analyst').classList.remove('active');
+  document.getElementById('editor-wrapper').classList.add('hidden');
+  document.getElementById('business-banner').classList.remove('hidden');
+  document.querySelectorAll('.analyst-only').forEach(el => el.classList.add('hidden'));
+};
+
+document.getElementById('btn-export-csv').onclick = () => {
+  const { columns, rows } = lastResult;
+  if (!rows.length) return;
+  const csv = [columns.join(','), ...rows.map(r => columns.map(c => `"${String(r[c] ?? '').replace(/"/g, '""')}"`).join(','))].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'sql_bi_resultados.csv';
+  a.click();
+};
 document.getElementById('btn-close-versions').onclick = () => document.getElementById('modal-versions').classList.add('hidden');
 document.getElementById('btn-new-alert').onclick = () => document.getElementById('modal-alert').classList.remove('hidden');
 document.getElementById('btn-close-alert').onclick = () => document.getElementById('modal-alert').classList.add('hidden');

@@ -2,6 +2,11 @@
 
 Este archivo es la memoria viva del repositorio. Registra cada hito, decisión técnica y entregable realizado.
 
+## [1.1.0] - 2026-11-26 (`main`)
+### Changed
+- `db/seed.sql`: Dataset histórico ampliado a **10,000 ventas en 5 años (2022–2026)** con estacionalidad real (picos en Nov/Dic), distribución no uniforme por canal (Web 38%, Tienda 30%, App 22%, Marketplace 10%) y 1–3 ítems por orden.
+- `frontend/`: Agregado selector **Modo Analista / Modo Negocio**, tarjetas **KPI automáticas**, banner de errores inline, **Exportar CSV** y tooltips interactivos en **D3.js**.
+
 ## [1.0.0] - 2026-11-26 (`feature/docs-dsl`)
 ### Added
 - `docs/ENTREGABLE_DSL.md`: Documentación completa del entregable (bases teóricas, justificación, demostración de abstracción, metamodelo UML en Mermaid, caso de uso `UC-001` + 3 historias de usuario en Gherkin `Given/When/Then` y guión de demo).

@@ -15,6 +15,10 @@
       <span class="subtitle">Self-Service Analytics · Retail Multicanal</span>
     </div>
     <div class="topbar-actions">
+      <div class="mode-switch">
+        <button id="btn-mode-analyst" class="mode-btn active">Modo Analista</button>
+        <button id="btn-mode-business" class="mode-btn">Modo Negocio</button>
+      </div>
       <span id="readonly-badge" class="badge badge-ok">Solo Lectura (SELECT)</span>
       <span id="exec-time" class="meta-text">0 ms</span>
       <button id="btn-run" class="btn btn-primary">▶ Ejecutar (Ctrl+Enter)</button>
@@ -24,7 +28,7 @@
 
   <main class="workspace">
     <aside class="sidebar">
-      <section class="panel">
+      <section class="panel analyst-only">
         <h3>Esquema (information_schema)</h3>
         <div id="schema-tree" class="list-box">Cargando esquema...</div>
       </section>
@@ -35,7 +39,7 @@
         <div id="template-params" class="params-box"></div>
       </section>
 
-      <section class="panel">
+      <section class="panel analyst-only">
         <h3>Consultas Guardadas</h3>
         <div id="queries-list" class="list-box"></div>
       </section>
@@ -48,15 +52,28 @@
     </aside>
 
     <section class="main-area">
-      <div class="editor-wrapper">
+      <div id="error-banner" class="error-banner hidden"></div>
+
+      <div id="editor-wrapper" class="editor-wrapper">
         <div id="monaco-container"></div>
         <div id="validation-bar" class="validation-bar valid">Sintaxis SQL válida (Solo Lectura)</div>
       </div>
 
+      <div id="business-banner" class="business-banner hidden">
+        <div>
+          <strong>Vista Ejecutiva (Modo Negocio)</strong>
+          <p class="meta-text">Selecciona un template a la izquierda, ajusta los filtros y presiona <strong>Ejecutar</strong>.</p>
+        </div>
+        <button id="btn-run-business" class="btn btn-primary">▶ Generar Reporte</button>
+      </div>
+
       <div class="results-wrapper">
+        <div id="kpi-cards" class="kpi-grid hidden"></div>
+
         <div class="tabs">
           <button class="tab-btn active" data-tab="table">Tabla de Resultados</button>
           <button class="tab-btn" data-tab="chart">Visualización D3.js</button>
+          <button id="btn-export-csv" class="btn btn-small" style="margin-left:auto;">⬇ Exportar CSV</button>
           <span id="row-count" class="meta-text">0 filas</span>
         </div>
 
@@ -76,12 +93,13 @@
             </label>
           </div>
           <div id="d3-chart"></div>
+          <div id="d3-tooltip" class="d3-tooltip hidden"></div>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Modal Versionado / Diff / Rollback -->
+  <!-- Modal Versionado / Rollback -->
   <div id="modal-versions" class="modal hidden">
     <div class="modal-content">
       <div class="modal-header">

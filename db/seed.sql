@@ -1,4 +1,4 @@
--- Dataset Semilla: .SQL-BI (Ventas Retail Multicanal)
+-- Dataset Semilla Realista: .SQL-BI (10,000 ventas en 5 años: 2022 - 2026)
 
 INSERT INTO canales (nombre, tipo) VALUES
 ('Tienda Física', 'fisico'),
@@ -38,37 +38,65 @@ INSERT INTO productos (sku, nombre, categoria_id, precio_unitario, costo_unitari
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO clientes (nombre, email, segmento, ciudad, fecha_registro) VALUES
-('Carlos Mendoza', 'cmendoza@mail.com', 'VIP', 'Lima', '2025-02-10'),
-('Lucía Paredes', 'lparedes@mail.com', 'Regular', 'Lima', '2025-03-15'),
-('TechCorp SAC', 'compras@techcorp.pe', 'Corporativo', 'Lima', '2025-01-20'),
-('Andrea Quispe', 'aquispe@mail.com', 'Regular', 'Arequipa', '2025-05-04'),
-('Jorge Vargas', 'jvargas@mail.com', 'VIP', 'Trujillo', '2025-06-18'),
-('Innova Retail SRL', 'logistica@innova.pe', 'Corporativo', 'Arequipa', '2025-04-12'),
-('Sofía Castro', 'scastro@mail.com', 'Regular', 'Cusco', '2025-07-22'),
-('Miguel Torres', 'mtorres@mail.com', 'VIP', 'Lima', '2025-08-30')
+('Carlos Mendoza', 'cmendoza@mail.com', 'VIP', 'Lima', '2022-02-10'),
+('Lucía Paredes', 'lparedes@mail.com', 'Regular', 'Lima', '2022-03-15'),
+('TechCorp SAC', 'compras@techcorp.pe', 'Corporativo', 'Lima', '2022-01-20'),
+('Andrea Quispe', 'aquispe@mail.com', 'Regular', 'Arequipa', '2022-05-04'),
+('Jorge Vargas', 'jvargas@mail.com', 'VIP', 'Trujillo', '2023-06-18'),
+('Innova Retail SRL', 'logistica@innova.pe', 'Corporativo', 'Arequipa', '2023-04-12'),
+('Sofía Castro', 'scastro@mail.com', 'Regular', 'Cusco', '2024-07-22'),
+('Miguel Torres', 'mtorres@mail.com', 'VIP', 'Lima', '2024-08-30')
 ON CONFLICT (email) DO NOTHING;
 
--- Generar 120 ventas históricas distribuidas entre 2025-10-01 y 2026-11-25
+-- Generar 10,000 ventas históricas (2022-01-01 a 2026-11-26) con distribución no uniforme
+WITH gen AS (
+    SELECT
+        gs,
+        random() AS r_canal,
+        random() AS r_estado,
+        random() AS r_fecha,
+        -- Estacionalidad: mayor probabilidad en meses 11 y 12 (Cyber/Navidad)
+        CASE
+            WHEN random() < 0.24 THEN TIMESTAMP '2022-11-01' + (floor(random() * 4)::int * INTERVAL '1 year') + (random() * INTERVAL '60 days')
+            ELSE TIMESTAMP '2022-01-01' + (random() * INTERVAL '1790 days')
+        END AS fecha_venta
+    FROM generate_series(1, 10000) AS gs
+)
 INSERT INTO ventas (fecha, canal_id, tienda_id, cliente_id, total, estado)
 SELECT
-    TIMESTAMP '2025-10-01 09:00:00' + (gs * INTERVAL '3 days') + ((gs % 10) * INTERVAL '1 hour'),
-    ((gs % 4) + 1),
-    CASE WHEN (gs % 4) = 0 THEN ((gs % 5) + 1) ELSE NULL END,
-    ((gs % 8) + 1),
+    fecha_venta,
+    CASE
+        WHEN r_canal < 0.38 THEN 2 -- E-commerce Web (38%)
+        WHEN r_canal < 0.68 THEN 1 -- Tienda Física (30%)
+        WHEN r_canal < 0.90 THEN 3 -- App Móvil (22%)
+        ELSE 4                     -- Marketplace (10%)
+    END AS canal_id,
+    CASE WHEN r_canal >= 0.38 AND r_canal < 0.68 THEN (floor(random() * 5)::int + 1) ELSE NULL END,
+    (floor(random() * 8)::int + 1),
     0,
-    CASE WHEN gs % 25 = 0 THEN 'anulada' ELSE 'completada' END
-FROM generate_series(1, 120) AS gs;
+    CASE
+        WHEN r_estado < 0.91 THEN 'completada'
+        WHEN r_estado < 0.95 THEN 'pendiente'
+        ELSE 'anulada'
+    END
+FROM gen;
 
--- Generar detalle_ventas para cada venta
+-- Generar entre 1 y 3 ítems por venta con popularidad realista
 INSERT INTO detalle_ventas (venta_id, producto_id, cantidad, precio_unitario, subtotal)
 SELECT
     v.id,
     p.id,
-    ((v.id % 3) + 1) AS cantidad,
+    cant,
     p.precio_unitario,
-    ((v.id % 3) + 1) * p.precio_unitario AS subtotal
+    cant * p.precio_unitario
 FROM ventas v
-JOIN productos p ON p.id = ((v.id % 11) + 1);
+CROSS JOIN LATERAL (
+    SELECT
+        (floor(random() * 11)::int + 1) AS prod_id,
+        (floor(random() * 3)::int + 1) AS cant
+    FROM generate_series(1, (floor(random() * 3)::int + 1))
+) item
+JOIN productos p ON p.id = item.prod_id;
 
 -- Actualizar totales de ventas
 UPDATE ventas v
