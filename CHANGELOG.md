@@ -2,6 +2,11 @@
 
 Este archivo es la memoria viva del repositorio. Registra cada hito, decisión técnica y entregable realizado.
 
+## [0.5.0] - 2026-11-26 (`feature/tests-deploy`)
+### Added
+- `backend/tests/sqlValidator.test.js`: 7 pruebas unitarias con Jest (100% de funciones y 86.95% de líneas cubiertas en el módulo crítico `sqlValidator.js`).
+- `Dockerfile` y `docker-compose.yml`: Despliegue reproducible con PostgreSQL 17 + inicialización automática de esquema y dataset semilla.
+
 ## [0.4.0] - 2026-11-26 (`feature/frontend-monaco-d3`)
 ### Added
 - `frontend/index.html`, `styles.css`, `app.js`: Interfaz `.SQL-BI` con Monaco Editor (autocompletado dinámico desde `information_schema`), validación en tiempo real, biblioteca de templates parametrizables, versionado con rollback, gestión de alertas y gráficos interactivos con D3.js (barras/líneas).
