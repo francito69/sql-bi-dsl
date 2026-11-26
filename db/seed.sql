@@ -95,6 +95,7 @@ CROSS JOIN LATERAL (
         (floor(random() * 11)::int + 1) AS prod_id,
         (floor(random() * 3)::int + 1) AS cant
     FROM generate_series(1, (floor(random() * 3)::int + 1))
+    WHERE v.id > 0
 ) item
 JOIN productos p ON p.id = item.prod_id;
 
