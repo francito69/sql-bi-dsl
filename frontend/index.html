@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>.SQL-BI — Self-Service Analytics de Ventas</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.0/min/vs/loader.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">.SQL-BI</span>
+      <span class="subtitle">Self-Service Analytics · Retail Multicanal</span>
+    </div>
+    <div class="topbar-actions">
+      <span id="readonly-badge" class="badge badge-ok">Solo Lectura (SELECT)</span>
+      <span id="exec-time" class="meta-text">0 ms</span>
+      <button id="btn-run" class="btn btn-primary">▶ Ejecutar (Ctrl+Enter)</button>
+      <button id="btn-save-query" class="btn btn-secondary">💾 Guardar Revisión</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="sidebar">
+      <section class="panel">
+        <h3>Esquema (information_schema)</h3>
+        <div id="schema-tree" class="list-box">Cargando esquema...</div>
+      </section>
+
+      <section class="panel">
+        <h3>Templates Parametrizables</h3>
+        <div id="templates-list" class="list-box"></div>
+        <div id="template-params" class="params-box"></div>
+      </section>
+
+      <section class="panel">
+        <h3>Consultas Guardadas</h3>
+        <div id="queries-list" class="list-box"></div>
+      </section>
+
+      <section class="panel">
+        <h3>Alertas SQL</h3>
+        <div id="alerts-list" class="list-box"></div>
+        <button id="btn-new-alert" class="btn btn-small">+ Nueva Alerta</button>
+      </section>
+    </aside>
+
+    <section class="main-area">
+      <div class="editor-wrapper">
+        <div id="monaco-container"></div>
+        <div id="validation-bar" class="validation-bar valid">Sintaxis SQL válida (Solo Lectura)</div>
+      </div>
+
+      <div class="results-wrapper">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="table">Tabla de Resultados</button>
+          <button class="tab-btn" data-tab="chart">Visualización D3.js</button>
+          <span id="row-count" class="meta-text">0 filas</span>
+        </div>
+
+        <div id="tab-table" class="tab-content active">
+          <div id="table-container" class="table-container">
+            <p class="placeholder">Ejecuta una consulta SELECT para ver los resultados.</p>
+          </div>
+        </div>
+
+        <div id="tab-chart" class="tab-content">
+          <div class="chart-controls">
+            <label>Tipo:
+              <select id="chart-type">
+                <option value="bar">Barras (D3)</option>
+                <option value="line">Línea (D3)</option>
+              </select>
+            </label>
+          </div>
+          <div id="d3-chart"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal Versionado / Diff / Rollback -->
+  <div id="modal-versions" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-versions-title">Historial de Versiones</h3>
+        <button id="btn-close-versions" class="btn btn-small">✕</button>
+      </div>
+      <div id="versions-list" class="versions-list"></div>
+    </div>
+  </div>
+
+  <!-- Modal Nueva Alerta -->
+  <div id="modal-alert" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Nueva Alerta SQL</h3>
+        <button id="btn-close-alert" class="btn btn-small">✕</button>
+      </div>
+      <form id="form-alert" class="form-grid">
+        <input id="alert-name" placeholder="Nombre de la alerta" required />
+        <textarea id="alert-sql" rows="3" placeholder="SELECT COUNT(*) AS valor FROM ventas WHERE estado = 'anulada';" required></textarea>
+        <div class="row-2">
+          <select id="alert-op">
+            <option value=">">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="=">=</option>
+          </select>
+          <input id="alert-threshold" type="number" step="0.01" placeholder="Umbral (ej. 3)" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar Alerta</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
