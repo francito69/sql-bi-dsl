@@ -47,6 +47,7 @@ require(['vs/editor/editor.main'], async () => {
   loadTemplates();
   loadQueries();
   loadAlerts();
+  executeQuery();
 });
 
 async function loadSchema() {
@@ -220,12 +221,17 @@ async function loadTemplates() {
   (data.templates || []).forEach((t) => {
     const div = document.createElement('div');
     div.className = 'list-item';
-    div.innerHTML = `<strong>${t.nombre}</strong>`;
+    div.innerHTML = `<strong>${t.nombre}</strong><br><span class="meta-text">${t.descripcion || ''}</span>`;
     div.onclick = () => {
+      document.querySelectorAll('#templates-list .list-item').forEach(el => el.classList.remove('active'));
+      div.classList.add('active');
       editor.setValue(t.sql_template);
       activeTemplateParams = t.parametros_json || [];
       const pBox = document.getElementById('template-params');
-      pBox.innerHTML = activeTemplateParams.map(p => `<input id="param-${p.name}" value="${p.default || ''}" placeholder="${p.name}" />`).join('');
+      pBox.innerHTML = activeTemplateParams
+        .map(p => `<div><label>${p.name}</label><input id="param-${p.name}" value="${p.default || ''}" placeholder="${p.name}" /></div>`)
+        .join('');
+      executeQuery();
     };
     list.appendChild(div);
   });

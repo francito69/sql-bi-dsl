@@ -25,10 +25,12 @@ body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg);
 .sidebar { width: 300px; background: var(--panel); border-right: 1px solid var(--border); overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 14px; }
 .panel h3 { font-size: 0.8rem; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.05em; }
 .list-box { display: flex; flex-direction: column; gap: 4px; font-size: 0.82rem; }
-.list-item { padding: 6px 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 5px; cursor: pointer; }
+.list-item { padding: 8px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
 .list-item:hover { border-color: var(--primary); }
-.params-box { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
-.params-box input { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 5px 8px; border-radius: 4px; font-size: 0.8rem; }
+.list-item.active { border-color: var(--primary); background: rgba(59, 130, 246, 0.15); }
+.params-box { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.params-box label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; }
+.params-box input { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 6px 8px; border-radius: 4px; font-size: 0.82rem; width: 100%; }
 .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 .editor-wrapper { height: 42%; display: flex; flex-direction: column; border-bottom: 1px solid var(--border); }
 #monaco-container { flex: 1; }
