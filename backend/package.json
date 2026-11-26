@@ -1,0 +1,23 @@
+{
+  "name": "sql-bi-dsl-backend",
+  "version": "1.0.0",
+  "description": "Backend para .SQL-BI: Self-service analytics de ventas con editor SQL (DSL Textual)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "node-cron": "^3.0.3",
+    "node-sql-parser": "^5.3.8",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  }
+}
