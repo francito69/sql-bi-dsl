@@ -2,6 +2,11 @@
 
 Este archivo es la memoria viva del repositorio. Registra cada hito, decisión técnica y entregable realizado.
 
+## [1.0.0] - 2026-11-26 (`feature/docs-dsl`)
+### Added
+- `docs/ENTREGABLE_DSL.md`: Documentación completa del entregable (bases teóricas, justificación, demostración de abstracción, metamodelo UML en Mermaid, caso de uso `UC-001` + 3 historias de usuario en Gherkin `Given/When/Then` y guión de demo).
+- `README.md`: Instrucciones reproducibles `clone → install → run` (Docker Compose y local).
+
 ## [0.5.0] - 2026-11-26 (`feature/tests-deploy`)
 ### Added
 - `backend/tests/sqlValidator.test.js`: 7 pruebas unitarias con Jest (100% de funciones y 86.95% de líneas cubiertas en el módulo crítico `sqlValidator.js`).
