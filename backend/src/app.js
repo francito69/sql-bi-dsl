@@ -1,9 +1,9 @@
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
-const { pool } = require('./db');
+const { pool, executeReadOnlyQuery } = require('./db');
 const { validateReadOnlySQL, renderSqlTemplate } = require('./sqlValidator');
-const { evaluateAlert } = require('./alertEngine');
+const { evaluateAlert, OPERATORS } = require('./alertEngine');
 
 const app = express();
 app.use(cors());
@@ -61,7 +61,7 @@ app.post('/api/query/execute', async (req, res) => {
 
   const start = Date.now();
   try {
-    const result = await pool.query(rendered);
+    const result = await executeReadOnlyQuery(rendered);
     const executionTimeMs = Date.now() - start;
     const columns = result.fields.map((f) => f.name);
     res.json({
@@ -123,38 +123,54 @@ app.post('/api/queries', async (req, res) => {
   if (!validation.valid) {
     return res.status(400).json({ error: validation.error });
   }
-  if (!nombre) {
+  const cleanName = typeof nombre === 'string' ? nombre.trim() : '';
+  if (!cleanName) {
     return res.status(400).json({ error: 'El nombre de la consulta es obligatorio.' });
   }
 
+  const client = await pool.connect();
   try {
-    const existing = await pool.query('SELECT * FROM consultas_guardadas WHERE nombre = $1', [nombre]);
+    await client.query('BEGIN');
+    const existing = await client.query('SELECT * FROM consultas_guardadas WHERE nombre = $1 FOR UPDATE', [cleanName]);
     if (existing.rows.length === 0) {
-      const created = await pool.query(
+      const created = await client.query(
         'INSERT INTO consultas_guardadas (nombre, descripcion, version_actual) VALUES ($1, $2, 1) RETURNING *',
-        [nombre, descripcion || '']
+        [cleanName, descripcion || '']
       );
       const queryId = created.rows[0].id;
-      await pool.query(
+      await client.query(
         'INSERT INTO consulta_versiones (consulta_id, version, sql_texto, comentario) VALUES ($1, 1, $2, $3)',
         [queryId, sql_texto, comentario || 'Versión inicial']
       );
+      await client.query('COMMIT');
       return res.status(201).json({ query: created.rows[0], version: 1 });
     }
 
     const queryRow = existing.rows[0];
-    const nextVersion = queryRow.version_actual + 1;
-    await pool.query(
+    const maxRes = await client.query(
+      'SELECT COALESCE(MAX(version), 0) AS max_version FROM consulta_versiones WHERE consulta_id = $1',
+      [queryRow.id]
+    );
+    const nextVersion = Number(maxRes.rows[0].max_version) + 1;
+    await client.query(
       'INSERT INTO consulta_versiones (consulta_id, version, sql_texto, comentario) VALUES ($1, $2, $3, $4)',
       [queryRow.id, nextVersion, sql_texto, comentario || `Revisión v${nextVersion}`]
     );
-    const updated = await pool.query(
+    const updated = await client.query(
       'UPDATE consultas_guardadas SET version_actual = $1 WHERE id = $2 RETURNING *',
       [nextVersion, queryRow.id]
     );
+    await client.query('COMMIT');
     res.json({ query: updated.rows[0], version: nextVersion });
   } catch (err) {
+    try {
+      await client.query('ROLLBACK');
+    } catch (_) {
+      // ignorar error secundario en rollback
+    }
     res.status(500).json({ error: err.message });
+  } finally {
+    client.release();
   }
 });
 
@@ -202,6 +218,18 @@ app.get('/api/alerts', async (_req, res) => {
 
 app.post('/api/alerts', async (req, res) => {
   const { nombre, sql_condicion, operador, umbral, intervalo_cron } = req.body || {};
+  const cleanName = typeof nombre === 'string' ? nombre.trim() : '';
+  if (!cleanName) {
+    return res.status(400).json({ error: 'El nombre de la alerta es obligatorio.' });
+  }
+  const op = operador || '>';
+  if (!Object.prototype.hasOwnProperty.call(OPERATORS, op)) {
+    return res.status(400).json({ error: `Operador inválido: ${op}. Permitidos: ${Object.keys(OPERATORS).join(', ')}.` });
+  }
+  const numericThreshold = Number(umbral);
+  if (umbral === undefined || umbral === null || umbral === '' || !Number.isFinite(numericThreshold)) {
+    return res.status(400).json({ error: 'El umbral debe ser un número válido.' });
+  }
   const validation = validateReadOnlySQL(sql_condicion);
   if (!validation.valid) {
     return res.status(400).json({ error: validation.error });
@@ -209,7 +237,7 @@ app.post('/api/alerts', async (req, res) => {
   try {
     const { rows } = await pool.query(
       'INSERT INTO alertas_sql (nombre, sql_condicion, operador, umbral, intervalo_cron) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [nombre, sql_condicion, operador || '>', Number(umbral), intervalo_cron || '*/5 * * * *']
+      [cleanName, sql_condicion, op, numericThreshold, intervalo_cron || '*/5 * * * *']
     );
     res.status(201).json({ alert: rows[0] });
   } catch (err) {

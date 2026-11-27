@@ -48,62 +48,69 @@ INSERT INTO clientes (nombre, email, segmento, ciudad, fecha_registro) VALUES
 ('Miguel Torres', 'mtorres@mail.com', 'VIP', 'Lima', '2024-08-30')
 ON CONFLICT (email) DO NOTHING;
 
--- Generar 10,000 ventas históricas (2022-01-01 a 2026-11-26) con distribución no uniforme
-WITH gen AS (
-    SELECT
-        gs,
-        random() AS r_canal,
-        random() AS r_estado,
-        random() AS r_fecha,
-        -- Estacionalidad: mayor probabilidad en meses 11 y 12 (Cyber/Navidad)
-        CASE
-            WHEN random() < 0.24 THEN TIMESTAMP '2022-11-01' + (floor(random() * 4)::int * INTERVAL '1 year') + (random() * INTERVAL '60 days')
-            ELSE TIMESTAMP '2022-01-01' + (random() * INTERVAL '1790 days')
-        END AS fecha_venta
-    FROM generate_series(1, 10000) AS gs
-)
-INSERT INTO ventas (fecha, canal_id, tienda_id, cliente_id, total, estado)
-SELECT
-    fecha_venta,
-    CASE
-        WHEN r_canal < 0.38 THEN 2 -- E-commerce Web (38%)
-        WHEN r_canal < 0.68 THEN 1 -- Tienda Física (30%)
-        WHEN r_canal < 0.90 THEN 3 -- App Móvil (22%)
-        ELSE 4                     -- Marketplace (10%)
-    END AS canal_id,
-    CASE WHEN r_canal >= 0.38 AND r_canal < 0.68 THEN (floor(random() * 5)::int + 1) ELSE NULL END,
-    (floor(random() * 8)::int + 1),
-    0,
-    CASE
-        WHEN r_estado < 0.91 THEN 'completada'
-        WHEN r_estado < 0.95 THEN 'pendiente'
-        ELSE 'anulada'
-    END
-FROM gen;
+-- Generar 10,000 ventas históricas (2022-01-01 a 2026-11-26) de forma idempotente
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM ventas LIMIT 1) THEN
+        WITH gen AS (
+            SELECT
+                gs,
+                random() AS r_canal,
+                random() AS r_estado,
+                -- Estacionalidad: mayor probabilidad en meses 11 y 12 (Cyber/Navidad)
+                CASE
+                    WHEN random() < 0.24 THEN LEAST(
+                        TIMESTAMP '2026-11-26 23:59:59',
+                        TIMESTAMP '2022-11-01' + (floor(random() * 5)::int * INTERVAL '1 year') + (random() * INTERVAL '60 days')
+                    )
+                    ELSE TIMESTAMP '2022-01-01' + (random() * INTERVAL '1790 days')
+                END AS fecha_venta
+            FROM generate_series(1, 10000) AS gs
+        )
+        INSERT INTO ventas (fecha, canal_id, tienda_id, cliente_id, total, estado)
+        SELECT
+            fecha_venta,
+            CASE
+                WHEN r_canal < 0.38 THEN 2 -- E-commerce Web (38%)
+                WHEN r_canal < 0.68 THEN 1 -- Tienda Física (30%)
+                WHEN r_canal < 0.90 THEN 3 -- App Móvil (22%)
+                ELSE 4                     -- Marketplace (10%)
+            END AS canal_id,
+            CASE WHEN r_canal >= 0.38 AND r_canal < 0.68 THEN (floor(random() * 5)::int + 1) ELSE NULL END,
+            (floor(random() * 8)::int + 1),
+            0,
+            CASE
+                WHEN r_estado < 0.91 THEN 'completada'
+                WHEN r_estado < 0.95 THEN 'pendiente'
+                ELSE 'anulada'
+            END
+        FROM gen;
 
--- Generar entre 1 y 3 ítems por venta con popularidad realista
-INSERT INTO detalle_ventas (venta_id, producto_id, cantidad, precio_unitario, subtotal)
-SELECT
-    v.id,
-    p.id,
-    cant,
-    p.precio_unitario,
-    cant * p.precio_unitario
-FROM ventas v
-CROSS JOIN LATERAL (
-    SELECT
-        (floor(random() * 11)::int + 1) AS prod_id,
-        (floor(random() * 3)::int + 1) AS cant
-    FROM generate_series(1, (floor(random() * 3)::int + 1))
-    WHERE v.id > 0
-) item
-JOIN productos p ON p.id = item.prod_id;
+        -- Generar entre 1 y 3 ítems por venta con popularidad realista
+        INSERT INTO detalle_ventas (venta_id, producto_id, cantidad, precio_unitario, subtotal)
+        SELECT
+            v.id,
+            p.id,
+            cant,
+            p.precio_unitario,
+            cant * p.precio_unitario
+        FROM ventas v
+        CROSS JOIN LATERAL (
+            SELECT
+                (floor(random() * 11)::int + 1) AS prod_id,
+                (floor(random() * 3)::int + 1) AS cant
+            FROM generate_series(1, (floor(random() * 3)::int + 1))
+            WHERE v.id > 0
+        ) item
+        JOIN productos p ON p.id = item.prod_id;
 
--- Actualizar totales de ventas
-UPDATE ventas v
-SET total = COALESCE((
-    SELECT SUM(dv.subtotal) FROM detalle_ventas dv WHERE dv.venta_id = v.id
-), 0);
+        -- Actualizar totales de ventas
+        UPDATE ventas v
+        SET total = COALESCE((
+            SELECT SUM(dv.subtotal) FROM detalle_ventas dv WHERE dv.venta_id = v.id
+        ), 0);
+    END IF;
+END $$;
 
 -- Templates parametrizables iniciales
 INSERT INTO sql_templates (nombre, descripcion, sql_template, parametros_json) VALUES
@@ -121,12 +128,14 @@ ORDER BY ingresos DESC;',
 ),
 (
     'Top Productos por Categoría',
-    'Ranking de productos más vendidos filtrado por categoría.',
+    'Ranking de productos más vendidos filtrado por categoría (ventas completadas).',
     'SELECT p.nombre AS producto, cat.nombre AS categoria, SUM(dv.cantidad) AS unidades, SUM(dv.subtotal) AS ingresos
 FROM detalle_ventas dv
+JOIN ventas v ON v.id = dv.venta_id
 JOIN productos p ON p.id = dv.producto_id
 JOIN categorias cat ON cat.id = p.categoria_id
-WHERE cat.nombre = ''{{categoria}}''
+WHERE v.estado = ''completada''
+  AND cat.nombre = ''{{categoria}}''
 GROUP BY p.nombre, cat.nombre
 ORDER BY ingresos DESC;',
     '[{"name":"categoria","default":"Computación"}]'::jsonb

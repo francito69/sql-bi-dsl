@@ -1,5 +1,5 @@
 const cron = require('node-cron');
-const { pool } = require('./db');
+const { pool, executeReadOnlyQuery } = require('./db');
 const { validateReadOnlySQL } = require('./sqlValidator');
 
 const OPERATORS = {
@@ -13,7 +13,7 @@ const OPERATORS = {
 /**
  * Evalúa una condición de alerta SQL contra la base de datos y registra el resultado.
  * @param {object} alert
- * @returns {Promise<{ disparada: boolean, valorObtenido: number, mensaje: string }>}
+ * @returns {Promise<{ disparada: boolean, valorObtenido: number|null, mensaje: string }>}
  */
 async function evaluateAlert(alert) {
   const validation = validateReadOnlySQL(alert.sql_condicion);
@@ -26,10 +26,11 @@ async function evaluateAlert(alert) {
     return { disparada: false, valorObtenido: null, mensaje };
   }
 
-  const result = await pool.query(alert.sql_condicion);
+  const result = await executeReadOnlyQuery(alert.sql_condicion);
   const firstRow = result.rows[0] || {};
   const firstKey = Object.keys(firstRow)[0];
-  const valorObtenido = Number(firstRow[firstKey] ?? 0);
+  const parsedValue = Number(firstRow[firstKey] ?? 0);
+  const valorObtenido = Number.isFinite(parsedValue) ? parsedValue : 0;
   const umbral = Number(alert.umbral);
   const comparator = OPERATORS[alert.operador] || OPERATORS['>'];
   const disparada = comparator(valorObtenido, umbral);

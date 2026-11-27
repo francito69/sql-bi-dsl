@@ -36,6 +36,18 @@ describe('sqlValidator - Modo Solo Lectura (DSL)', () => {
     expect(validateReadOnlySQL('').valid).toBe(false);
     expect(validateReadOnlySQL('SELEC * FORM ventas').valid).toBe(false);
   });
+
+  test('permite palabras clave dentro de cadenas literales, comentarios o CTE SELECT válidos', () => {
+    expect(validateReadOnlySQL("SELECT 'update' AS accion, 'drop' AS tipo FROM canales;").valid).toBe(true);
+    expect(validateReadOnlySQL('SELECT id, nombre FROM canales -- delete;').valid).toBe(true);
+    expect(validateReadOnlySQL('WITH c AS (SELECT id, nombre FROM canales) SELECT * FROM c;').valid).toBe(true);
+  });
+
+  test('bloquea DML dentro de CTEs (WITH) y sentencias TRUNCATE/GRANT', () => {
+    expect(validateReadOnlySQL('WITH d AS (DELETE FROM ventas RETURNING id) SELECT * FROM d;').valid).toBe(false);
+    expect(validateReadOnlySQL('TRUNCATE TABLE ventas;').valid).toBe(false);
+    expect(validateReadOnlySQL('GRANT ALL ON ventas TO public;').valid).toBe(false);
+  });
 });
 
 describe('renderSqlTemplate - Templates Parametrizables', () => {
@@ -49,5 +61,17 @@ describe('renderSqlTemplate - Templates Parametrizables', () => {
     const tpl = "SELECT * FROM categorias WHERE nombre = '{{categoria}}';";
     const rendered = renderSqlTemplate(tpl, { categoria: "Audio' OR '1'='1" });
     expect(rendered).toContain("Audio'' OR ''1''=''1");
+  });
+
+  test('protege parámetros numéricos o sin comillas contra inyección SQL', () => {
+    const tpl = 'SELECT * FROM ventas LIMIT {{limite}};';
+    expect(renderSqlTemplate(tpl, { limite: 10 })).toBe('SELECT * FROM ventas LIMIT 10;');
+    const injected = renderSqlTemplate(tpl, { limite: '10 UNION SELECT * FROM alertas_sql' });
+    expect(injected).toBe("SELECT * FROM ventas LIMIT '10 UNION SELECT * FROM alertas_sql';");
+  });
+
+  test('reemplaza con cadena vacía cuando falta el parámetro', () => {
+    const tpl = "SELECT * FROM categorias WHERE nombre = '{{categoria}}';";
+    expect(renderSqlTemplate(tpl, {})).toBe("SELECT * FROM categorias WHERE nombre = '';");
   });
 });

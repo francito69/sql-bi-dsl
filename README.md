@@ -17,7 +17,7 @@ Proyecto 2 del curso **SW608 Lenguajes de Dominio Específico (DSL)** — UNI FI
 
 ## Presentación Interactiva
 
-Con la aplicación en ejecución, abrir `http://localhost:3000/presentacion.html` para recorrer la presentación de 18 diapositivas, preparada para una exposición de 40 minutos. Incluye controles de teclado, índice de diapositivas y modo de pantalla completa.
+Con la aplicación en ejecución, abrir `http://localhost:3000/presentacion.html` para recorrer la presentación interactiva de 17 diapositivas. Incluye controles de teclado, índice de diapositivas y modo de pantalla completa.
 
 ## Instalación y Ejecución (`clone → install → run`)
 

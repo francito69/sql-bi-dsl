@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS canales (
 
 CREATE TABLE IF NOT EXISTS tiendas (
     id SERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100) NOT NULL UNIQUE,
     ciudad VARCHAR(80) NOT NULL,
     region VARCHAR(60) NOT NULL
 );
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS consulta_versiones (
 
 CREATE TABLE IF NOT EXISTS alertas_sql (
     id SERIAL PRIMARY KEY,
-    nombre VARCHAR(120) NOT NULL,
+    nombre VARCHAR(120) NOT NULL UNIQUE,
     sql_condicion TEXT NOT NULL,
     operador VARCHAR(10) NOT NULL CHECK (operador IN ('>', '>=', '<', '<=', '=')),
     umbral NUMERIC(14,2) NOT NULL,
