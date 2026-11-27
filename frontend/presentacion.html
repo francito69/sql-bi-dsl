@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101615">
+  <meta name="description" content="Exposición de 40 minutos sobre .SQL-BI, un DSL de analítica de ventas con SQL.">
+  <title>.SQL-BI — Presentación del proyecto</title>
+  <link rel="stylesheet" href="presentacion.css">
+</head>
+<body>
+  <main class="deck" aria-label="Presentación del proyecto .SQL-BI">
+    <header class="deck-bar">
+      <a class="wordmark" href="index.html" aria-label="Volver a la aplicación .SQL-BI"><span>.</span>SQL-BI</a>
+      <div class="deck-context"><i></i> EXPOSICIÓN · SW608 · 40 MIN</div>
+      <div class="deck-tools">
+        <button class="icon-button" id="overview-toggle" type="button" aria-label="Mostrar índice de diapositivas" title="Índice">▦</button>
+        <button class="icon-button" id="fullscreen-toggle" type="button" aria-label="Activar pantalla completa" title="Pantalla completa">⛶</button>
+      </div>
+    </header>
+    <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
+
+    <section class="stage" id="stage">
+      <article class="slide active cover" data-title="La idea" aria-hidden="false">
+        <div class="cover-copy">
+          <p class="eyebrow"><i></i> ANALÍTICA DE VENTAS · RETAIL MULTICANAL</p>
+          <h1>De una pregunta<br>de negocio a <span>SQL.</span></h1>
+          <p class="cover-lede">Un lenguaje de dominio específico para explorar ventas, reutilizar análisis y mantener las consultas en modo de solo lectura.</p>
+          <button class="button button-lime" data-go="1" type="button">Comenzar la exposición <b>→</b></button>
+          <div class="cover-meta"><span>UNI FIIS</span><i></i><span>SW608 · Lenguajes de Dominio Específico</span><i></i><span>2026-II</span><i></i><span>← → NAVEGAR · F PANTALLA COMPLETA</span></div>
+        </div>
+        <div class="cover-art" aria-hidden="true">
+          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+          <div class="orbit-core"><span>SELECT</span><strong>valor</strong><small>FROM negocio</small><b>;</b></div>
+          <div class="float-card card-sales"><small>UNA PREGUNTA</small><strong>¿Qué canal vende más?</strong><span>SQL → respuesta</span></div>
+          <div class="float-card card-channel"><i>✓</i><strong>Solo lectura</strong><small>SELECT permitido</small></div>
+          <div class="float-card card-safe"><span>10 000</span><small>VENTAS SINTÉTICAS</small></div>
+        </div>
+        <span class="slide-index">01 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Ruta de la exposición" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> HOY · 40 MINUTOS</p><h2>Una pregunta, cinco capas<br><span>y una demostración completa.</span></h2></div>
+          <p class="heading-copy">La historia recorre el problema, los datos, las reglas y la experiencia. Cada bloque termina con algo concreto que podemos observar en el código o en la aplicación.</p>
+        </div>
+        <div class="agenda-grid">
+          <div class="agenda-card"><span>01</span><strong>El lenguaje</strong><p>Qué es el DSL, qué abstrae y cómo se especifica.</p><small>7 MIN</small></div>
+          <div class="agenda-card"><span>02</span><strong>Los datos</strong><p>El modelo retail y el autocompletado desde PostgreSQL.</p><small>7 MIN</small></div>
+          <div class="agenda-card"><span>03</span><strong>La protección</strong><p>Parser AST, validación en servidor y pruebas.</p><small>7 MIN</small></div>
+          <div class="agenda-card"><span>04</span><strong>La reutilización</strong><p>Templates, revisiones y evaluación de alertas.</p><small>7 MIN</small></div>
+          <div class="agenda-card"><span>05</span><strong>La experiencia</strong><p>Modos de usuario, visualización y despliegue.</p><small>7 MIN</small></div>
+        </div>
+        <div class="agenda-footer"><span>APERTURA</span><b>3 MIN</b><i>+</i><span>5 BLOQUES TEMÁTICOS</span><b>35 MIN</b><i>+</i><span>CIERRE</span><b>2 MIN = 40 MIN</b><small>Los bloques incluyen su demostración.</small></div>
+        <span class="slide-index">02 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Qué es un DSL" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> BLOQUE 01 · EL LENGUAJE</p><h2>Un DSL reduce la distancia<br><span>entre el problema y la solución.</span></h2></div>
+          <p class="heading-copy">Un lenguaje de dominio específico limita su vocabulario y sus operaciones a un área concreta. Aquí el área es el análisis de ventas.</p>
+        </div>
+        <div class="definition-layout">
+          <div class="definition-card">
+            <span class="big-quote">“</span>
+            <p>En vez de programar <em>cómo</em> recorrer los datos, describimos <strong>qué resultado</strong> queremos obtener.</p>
+            <span class="definition-caption">SQL ES DECLARATIVO: EL MOTOR RESUELVE EL PLAN DE EJECUCIÓN.</span>
+          </div>
+          <div class="concept-list">
+            <div><span class="concept-icon">01</span><strong>Dominio acotado</strong><p>Ventas, productos, canales, clientes e indicadores comerciales.</p></div>
+            <div><span class="concept-icon">02</span><strong>Vocabulario conocido</strong><p>SELECT, JOIN, WHERE y GROUP BY expresan operaciones analíticas.</p></div>
+            <div><span class="concept-icon">03</span><strong>Reglas propias</strong><p>Autocompletado del esquema, templates y ejecución solo de lectura.</p></div>
+          </div>
+        </div>
+        <div class="takeaway"><b>IDEA CLAVE</b><span>El DSL no es “otro SQL”: es SQL contextualizado y restringido para este caso de negocio.</span></div>
+        <span class="slide-index">03 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Por qué SQL" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> BLOQUE 01 · LA DECISIÓN DE DISEÑO</p><h2>SQL describe el análisis.<br><span>JavaScript lo implementa.</span></h2></div>
+          <p class="heading-copy">La elección no es que un lenguaje sea “mejor” para todo. SQL encaja mejor cuando el trabajo central es filtrar, relacionar y agregar datos.</p>
+        </div>
+        <div class="comparison-grid">
+          <section class="comparison-card">
+            <div class="comparison-head"><span>PROPÓSITO GENERAL</span><b>JavaScript</b></div>
+            <pre><code><i>const</i> totalPorCanal = {};
+<i>for</i> (<i>const</i> venta <i>of</i> ventas) {
+  <i>if</i> (venta.estado !== <em>'completada'</em>) <i>continue</i>;
+  totalPorCanal[venta.canal] =
+    (totalPorCanal[venta.canal] || <b>0</b>)
+    + Number(venta.total);
+}
+<i>// Faltan joins, nulos y ordenamiento</i></code></pre>
+            <div class="comparison-note">Hay que implementar a mano el recorrido y la agrupación.</div>
+          </section>
+          <div class="compare-arrow"><span>→</span><small>EL MISMO ANÁLISIS</small></div>
+          <section class="comparison-card sql-card">
+            <div class="comparison-head"><span>DOMINIO ANALÍTICO</span><b>SQL · .SQL-BI</b></div>
+            <pre><code><i>SELECT</i> c.nombre <i>AS</i> canal,
+       <b>SUM</b>(v.total) <i>AS</i> ingresos
+<i>FROM</i> ventas v
+<i>JOIN</i> canales c <i>ON</i> c.id = v.canal_id
+<i>WHERE</i> v.estado = <em>'completada'</em>
+<i>GROUP BY</i> c.nombre
+<i>ORDER BY</i> ingresos <i>DESC</i>;</code></pre>
+            <div class="comparison-note">El motor SQL ejecuta la relación y agregación.</div>
+          </section>
+        </div>
+        <div class="principle-strip"><span>MENOS CÓDIGO IMPERATIVO</span><span>CONSULTA REUTILIZABLE</span><span>PLAN DE EJECUCIÓN A CARGO DE POSTGRESQL</span></div>
+        <span class="slide-index">04 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Metamodelo y requisitos" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> BLOQUE 01 · MODELO Y REQUISITOS</p><h2>Del concepto de negocio<br><span>a reglas comprobables.</span></h2></div>
+          <p class="heading-copy">El metamodelo define de qué está hecha una consulta. Gherkin describe cómo debe comportarse ante situaciones concretas.</p>
+        </div>
+        <div class="metamodel-layout">
+          <div class="metamodel-core"><small>CONCEPTO CENTRAL</small><strong>Consulta BI</strong><span>SQL · solo lectura</span></div>
+          <div class="metamodel-branches">
+            <div><b>Proyección</b><span>métricas y dimensiones</span><code>SUM(total) AS ingresos</code></div>
+            <div><b>Fuente y relación</b><span>tablas y joins del dominio</span><code>FROM ventas JOIN canales</code></div>
+            <div><b>Filtro y agrupación</b><span>reglas de negocio y corte</span><code>WHERE · GROUP BY</code></div>
+            <div><b>Template y alerta</b><span>reutilización y monitoreo</span><code>{{fecha_inicio}} · umbral</code></div>
+          </div>
+        </div>
+        <div class="story-row">
+          <div><small>US-01 · SEGURIDAD</small><p><b>Given</b> una consulta en el editor, <b>When</b> se intenta ejecutar DROP, <b>Then</b> se rechaza.</p></div>
+          <div><small>US-02 · TEMPLATE</small><p><b>Given</b> un rango de fechas, <b>When</b> se ejecuta la plantilla, <b>Then</b> se muestran tabla y gráfico.</p></div>
+          <div><small>US-03 · VERSIONADO</small><p><b>Given</b> varias revisiones, <b>When</b> se restaura v1, <b>Then</b> el editor recupera su SQL.</p></div>
+        </div>
+        <span class="slide-index">05 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Modelo de datos retail" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> BLOQUE 02 · LOS DATOS</p><h2>El esquema representa<br><span>cómo vende el negocio.</span></h2></div>
+          <p class="heading-copy">Una tabla de hechos concentra cada venta; las dimensiones aportan el contexto. El detalle permite analizar productos y unidades.</p>
+        </div>
+        <div class="retail-model">
+          <div class="model-entity fact-entity"><small>TABLA DE HECHOS</small><strong>ventas</strong><p>fecha · canal_id · cliente_id<br>tienda_id · total · estado</p><b>1 fila por orden</b></div>
+          <div class="model-entity detail-entity"><small>DESGLOSE</small><strong>detalle_ventas</strong><p>venta_id · producto_id<br>cantidad · subtotal</p></div>
+          <div class="model-entity dim-channel"><small>DIMENSIÓN</small><strong>canales</strong><p>Físico · Web · App<br>Marketplace</p></div>
+          <div class="model-entity dim-client"><small>DIMENSIÓN</small><strong>clientes</strong><p>Regular · VIP<br>Corporativo</p></div>
+          <div class="model-entity dim-product"><small>DIMENSIÓN</small><strong>productos</strong><p>SKU · precio · costo<br>categoría_id</p></div>
+          <div class="model-entity dim-store"><small>DIMENSIÓN</small><strong>tiendas</strong><p>nombre · ciudad<br>región</p></div>
+          <svg class="retail-lines" viewBox="0 0 1000 380" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M500 155 L180 65 M500 155 L820 65 M500 155 L175 260 M500 155 L825 260 M500 245 L500 315"/>
+          </svg>
+        </div>
+        <div class="takeaway"><b>LECTURA DEL MODELO</b><span>Una venta se relaciona con un canal y un cliente; una venta puede tener varios detalles, cada uno vinculado a un producto.</span></div>
+        <span class="slide-index">06 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Dataset y datos semilla" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> BLOQUE 02 · DATOS DE DEMOSTRACIÓN</p><h2>10 000 ventas sintéticas<br><span>para recorrer cinco años.</span></h2></div>
+          <p class="heading-copy">El seed crea volumen reproducible en cantidad, pero los valores se generan con random(). Sirve para demostraciones y consultas; no representa ventas reales.</p>
+        </div>
+        <div class="seed-layout">
+          <div class="seed-number"><span>GENERADAS EN SQL</span><strong>10 000</strong><small>ventas · 2022—2026</small><div class="seed-command"><code>generate_series(1, 10000)</code></div></div>
+          <div class="seed-details">
+            <div class="seed-row"><b>Canal</b><div class="distribution"><i style="width:38%"></i><i style="width:30%"></i><i style="width:22%"></i><i style="width:10%"></i></div><small>Web 38% · física 30% · app 22% · marketplace 10%</small></div>
+            <div class="seed-row"><b>Estado</b><div class="distribution status-dist"><i style="width:91%"></i><i style="width:4%"></i><i style="width:5%"></i></div><small>Completada 91% · pendiente 4% · anulada 5%</small></div>
+            <div class="seed-row"><b>Detalle</b><div class="detail-chips"><span>1–3 ítems / orden</span><span>11 productos</span><span>5 categorías</span></div><small>El total de cada venta se actualiza desde sus subtotales.</small></div>
+            <div class="seed-row"><b>Calendario</b><div class="detail-chips"><span>2022—2026</span><span>estacionalidad nov/dic</span></div><small>El seed favorece algunos periodos de fin de año.</small></div>
+          </div>
+        </div>
+        <div class="takeaway"><b>AL EXPLICAR</b><span>El volumen y las distribuciones son datos de prueba generados; el valor está en poder ensayar consultas representativas, no en simular una empresa real.</span></div>
+        <span class="slide-index">07 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Information schema y autocompletado" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> BLOQUE 02 · DESCUBRIR EL ESQUEMA</p><h2>El editor aprende los nombres<br><span>desde la base de datos.</span></h2></div>
+          <p class="heading-copy">No se mantiene una lista de columnas escrita a mano en el navegador. El backend consulta los metadatos reales del esquema público.</p>
+        </div>
+        <div class="autocomplete-flow">
+          <div class="step-card"><span>1 · POSTGRESQL</span><strong>information_schema.columns</strong><p>Se leen tabla, columna y tipo de dato.</p><code>table_name · column_name · data_type</code></div>
+          <div class="flow-arrow">→</div>
+          <div class="step-card"><span>2 · API</span><strong>GET /api/schema</strong><p>El backend agrupa columnas por tabla.</p><code>{ schema: { ventas: [...] } }</code></div>
+          <div class="flow-arrow">→</div>
+          <div class="step-card"><span>3 · MONACO</span><strong>Sugerencias contextuales</strong><p>Palabras SQL, tablas y columnas tipadas.</p><code>ventas.total · numeric</code></div>
+        </div>
+        <div class="editor-example">
+          <div class="editor-line"><span>1</span><code><i>SELECT</i> ventas.</code><b></b></div>
+          <div class="suggestion-list"><div><span>▦</span><strong>ventas</strong><small>Tabla</small></div><div class="selected"><span>⌗</span><strong>ventas.total</strong><small>numeric</small></div><div><span>⌗</span><strong>ventas.fecha</strong><small>timestamp</small></div></div>
+          <p>DEMO: abrir el editor, escribir <code>SELECT </code> y mostrar tablas y campos sugeridos.</p>
+        </div>
+        <span class="slide-index">08 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Validación con parser AST" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> BLOQUE 03 · PROTEGER LA EJECUCIÓN</p><h2>Una lista de palabras no basta.<br><span>También se analiza la estructura.</span></h2></div>
+          <p class="heading-copy">El parser convierte el texto SQL en un árbol sintáctico abstracto (AST). Así se puede comprobar el tipo de sentencia antes de ejecutarla.</p>
+        </div>
+        <div class="validation-pipeline">
+          <div class="pipeline-step"><span>01 · ENTRADA</span><strong>SQL no vacío</strong><p>Se descarta texto vacío.</p></div>
+          <div class="pipeline-link">→</div>
+          <div class="pipeline-step"><span>02 · FILTRO</span><strong>Palabras prohibidas</strong><p>DROP, DELETE, UPDATE, INSERT y otras.</p></div>
+          <div class="pipeline-link">→</div>
+          <div class="pipeline-step"><span>03 · AST</span><strong>node-sql-parser</strong><p>Dialecto PostgresQL; una sola sentencia.</p></div>
+          <div class="pipeline-link">→</div>
+          <div class="pipeline-step allow-step"><span>04 · DECISIÓN</span><strong>Solo tipo SELECT</strong><p>Si pasa las reglas, se permite continuar.</p></div>
+        </div>
+        <div class="security-examples">
+          <div class="example-allowed"><span>PERMITIDA</span><code>SELECT canal, SUM(total) ...</code><b>✓</b></div>
+          <div class="example-blocked"><span>BLOQUEADA</span><code>DELETE FROM ventas;</code><b>×</b></div>
+          <div class="example-blocked"><span>BLOQUEADA</span><code>SELECT ...; DROP TABLE ...;</code><b>×</b></div>
+        </div>
+        <div class="caution-note"><b>ALCANCE</b><span>Es una barrera de aplicación para el tipo de sentencia; en un despliegue real conviene sumar un usuario de base de datos con permisos de solo lectura.</span></div>
+        <span class="slide-index">09 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Validación en cliente y servidor" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> BLOQUE 03 · DOS PUNTOS DE CONTROL</p><h2>La interfaz da feedback.<br><span>El servidor toma la decisión.</span></h2></div>
+          <p class="heading-copy">La validación del navegador mejora la experiencia, pero no es una frontera de seguridad: cualquier cliente podría llamar directamente a la API.</p>
+        </div>
+        <div class="guard-layout">
+          <div class="guard-column">
+            <span class="guard-number">A</span><div><small>MIENTRAS SE ESCRIBE</small><h3>Validación interactiva</h3><p>El editor envía SQL y parámetros a <code>POST /api/query/validate</code>. La barra muestra si la consulta es válida.</p></div>
+            <div class="guard-result valid-result"><b>✓</b><span>feedback visible antes de ejecutar</span></div>
+          </div>
+          <div class="guard-divider"><span>Y ADEMÁS</span></div>
+          <div class="guard-column server-column">
+            <span class="guard-number">B</span><div><small>AL EJECUTAR</small><h3>Validación en backend</h3><p><code>POST /api/query/execute</code> vuelve a validar el SQL. Si falla, responde HTTP 400; solo después llama a <code>pool.query()</code>.</p></div>
+            <div class="guard-result server-result"><b>↳</b><span>la decisión confiable está en el servidor</span></div>
+          </div>
+        </div>
+        <div class="takeaway"><b>SECUENCIA</b><span>Enviar consulta → renderizar parámetros → validar → ejecutar únicamente si el resultado es válido.</span></div>
+        <span class="slide-index">10 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Pruebas automatizadas" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> BLOQUE 03 · CÓMO COMPROBAMOS LAS REGLAS</p><h2>Las reglas importantes<br><span>tienen pruebas que las ejercitan.</span></h2></div>
+          <p class="heading-copy">Jest prueba el validador y el renderizado de templates sin requerir una base de datos. El script también solicita un reporte de cobertura.</p>
+        </div>
+        <div class="tests-layout">
+          <div class="test-summary"><span>SUITE ACTUAL</span><strong>7</strong><small>casos Jest</small><code>npm test</code><p>Ejecuta Jest con <code>--coverage</code>.</p></div>
+          <div class="test-groups">
+            <div class="test-group"><span class="test-icon green">✓</span><div><strong>SQL que sí debe pasar</strong><p>SELECT simple y SELECT con JOIN, WHERE, GROUP BY y ORDER BY.</p></div><b>2</b></div>
+            <div class="test-group"><span class="test-icon red">×</span><div><strong>SQL que debe bloquearse</strong><p>DROP, DELETE, UPDATE, INSERT y múltiples sentencias.</p></div><b>2</b></div>
+            <div class="test-group"><span class="test-icon amber">!</span><div><strong>Entradas inválidas</strong><p>Texto vacío y sintaxis incorrecta.</p></div><b>1</b></div>
+            <div class="test-group"><span class="test-icon blue">⌘</span><div><strong>Templates</strong><p>Reemplazo de variables y escape de comillas simples.</p></div><b>2</b></div>
+          </div>
+        </div>
+        <div class="demo-callout"><b>DEMO EN VIVO</b><span>Escribir <code>DELETE FROM ventas;</code> y después intentar ejecutarla. Mostrar el rechazo en el editor y la respuesta del backend.</span></div>
+        <span class="slide-index">11 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Templates parametrizables" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> BLOQUE 04 · REUTILIZAR CONSULTAS</p><h2>Una estructura analítica.<br><span>Filtros distintos para cada pregunta.</span></h2></div>
+          <p class="heading-copy">Los templates se guardan en la base con nombre, descripción, SQL y metadatos de parámetros. La aplicación genera campos para los filtros.</p>
+        </div>
+        <div class="template-layout">
+          <div class="template-catalog">
+            <span>CATÁLOGO INICIAL · 3 TEMPLATES</span>
+            <div><b>01</b><strong>Ventas por canal en rango</strong><small>fecha_inicio · fecha_fin</small></div>
+            <div><b>02</b><strong>Top productos por categoría</strong><small>categoria</small></div>
+            <div><b>03</b><strong>Ticket promedio por segmento</strong><small>sin parámetros</small></div>
+          </div>
+          <div class="template-query">
+            <span>SQL TEMPLATE</span>
+            <pre><code><i>SELECT</i> c.nombre, <b>SUM</b>(v.total)
+<i>FROM</i> ventas v <i>JOIN</i> canales c <i>ON</i> ...
+<i>WHERE</i> v.fecha <i>BETWEEN</i>
+  <em>'{{fecha_inicio}}'</em> <i>AND</i> <em>'{{fecha_fin}}'</em>
+<i>GROUP BY</i> c.nombre;</code></pre>
+            <div class="template-steps"><span>Elegir</span><b>→</b><span>Completar filtros</span><b>→</b><span>Validar</span><b>→</b><span>Ejecutar</span></div>
+          </div>
+        </div>
+        <div class="caution-note"><b>NOTA TÉCNICA</b><span>Los placeholders se sustituyen en la aplicación y se escapan comillas simples; no son parámetros bind nativos de PostgreSQL. El SQL resultante vuelve a validarse.</span></div>
+        <span class="slide-index">12 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Versionado y rollback" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> BLOQUE 04 · CONSERVAR ITERACIONES</p><h2>Cambiar una consulta<br><span>no debería borrar su historia.</span></h2></div>
+          <p class="heading-copy">Las consultas guardadas se separan de sus revisiones. Cada versión mantiene su propio texto SQL y comentario.</p>
+        </div>
+        <div class="version-layout">
+          <div class="version-timeline">
+            <div class="version-item"><span>v1</span><div><strong>Consulta inicial</strong><small>Ingresos por mes</small></div><i>○</i></div>
+            <div class="version-item"><span>v2</span><div><strong>Solo completadas</strong><small>Se añade filtro de estado</small></div><i>○</i></div>
+            <div class="version-item current-version"><span>v3</span><div><strong>Versión activa</strong><small>La consulta que usa el equipo</small></div><i>ACTIVA</i></div>
+          </div>
+          <div class="rollback-card"><span>ROLLBACK</span><strong>Restaurar v1</strong><p>El endpoint busca la revisión, actualiza <code>version_actual</code> y devuelve el SQL restaurado.</p><div class="rollback-arrow">v3 <i>→</i> v1</div><small>El frontend coloca el SQL recuperado en el editor y vuelve a cargar la lista.</small></div>
+        </div>
+        <div class="api-strip"><span>GET /api/queries</span><i>lista</i><span>GET /api/queries/:id/versions</span><i>historial</i><span>POST /api/queries/:id/rollback</span><i>restaurar</i></div>
+        <span class="slide-index">13 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Motor de alertas SQL" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> BLOQUE 04 · OBSERVAR INDICADORES</p><h2>Una consulta produce un valor.<br><span>Una regla decide si importa.</span></h2></div>
+          <p class="heading-copy">Las alertas guardan un SELECT, un operador y un umbral. La evaluación registra valor, resultado y mensaje en el historial.</p>
+        </div>
+        <div class="alert-flow">
+          <div class="alert-stage"><small>01 · EVALUAR SQL</small><strong>SELECT COUNT(*) AS valor</strong><p>Lee la primera columna de la primera fila.</p></div>
+          <div class="alert-op">→</div>
+          <div class="alert-stage"><small>02 · COMPARAR</small><strong>valor &gt; umbral</strong><p>Operadores: &gt; · ≥ · &lt; · ≤ · =</p></div>
+          <div class="alert-op">→</div>
+          <div class="alert-stage alert-trigger"><small>03 · REGISTRAR</small><strong>Disparada / normal</strong><p>Actualiza último valor y escribe historial.</p></div>
+        </div>
+        <div class="alert-example">
+          <div><span>EJEMPLO DEL SEED</span><strong>Ventas anuladas altas</strong><code>COUNT(*) de ventas con estado = 'anulada'</code></div>
+          <div class="threshold"><small>OPERADOR</small><b>&gt;</b></div>
+          <div class="threshold"><small>UMBRAL</small><b>3</b></div>
+          <div class="alert-frequency"><span>node-cron</span><strong>Cada 5 minutos</strong></div>
+        </div>
+        <div class="caution-note"><b>DETALLE DE IMPLEMENTACIÓN</b><span>El scheduler actual corre con una frecuencia fija de 5 minutos. intervalo_cron se almacena, pero no se usa para programar cada alerta individualmente.</span></div>
+        <span class="slide-index">14 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Modos de trabajo" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> BLOQUE 05 · LA EXPERIENCIA</p><h2>Dos puertas de entrada.<br><span>Un flujo compartido de análisis.</span></h2></div>
+          <p class="heading-copy">El modo cambia la interfaz, no las reglas de ejecución. Ambos caminos terminan enviando la consulta al mismo endpoint.</p>
+        </div>
+        <div class="modes-layout">
+          <div class="mode-card analyst-mode">
+            <div class="mode-head"><span>01</span><small>EXPLORAR Y CONTROLAR</small></div><h3>Modo Analista</h3>
+            <ul><li>Editor Monaco con SQL y autocompletado.</li><li>Árbol del esquema desde la base.</li><li>Validación visible al escribir.</li><li>Consultas guardadas, historial y rollback.</li></ul>
+            <div class="mode-result">SQL directo <b>→</b> ejecutar SELECT</div>
+          </div>
+          <div class="mode-bridge"><span>COMPARTEN</span><b>API<br>REST</b><i>↔</i></div>
+          <div class="mode-card business-mode">
+            <div class="mode-head"><span>02</span><small>OBTENER UN REPORTE</small></div><h3>Modo Negocio</h3>
+            <ul><li>Seleccionar una plantilla conocida.</li><li>Completar fechas o categoría.</li><li>Generar reporte sin editar SQL.</li><li>Consultar tabla, KPI y visualización.</li></ul>
+            <div class="mode-result">Template + filtros <b>→</b> ejecutar SELECT</div>
+          </div>
+        </div>
+        <div class="demo-callout"><b>DEMO</b><span>Cambiar entre ambos modos. En Negocio seleccionar “Ventas por Canal en Rango”, ajustar fechas y generar el reporte.</span></div>
+        <span class="slide-index">15 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Resultados y visualización" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> BLOQUE 05 · HACER LEGIBLE EL RESULTADO</p><h2>La consulta termina<br><span>en una respuesta que se puede explorar.</span></h2></div>
+          <p class="heading-copy">Los resultados se presentan como tabla y gráfico. La visualización se construye en el navegador con D3.js.</p>
+        </div>
+        <div class="results-layout">
+          <div class="result-features">
+            <div><span>01</span><b>Tabla</b><p>Columnas y filas devueltas por la API.</p></div>
+            <div><span>02</span><b>Gráfico</b><p>Barras o línea con tooltip al pasar el cursor.</p></div>
+            <div><span>03</span><b>KPI y CSV</b><p>Resumen numérico y descarga del resultado.</p></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-head"><div><small>VISTA DE EJEMPLO · CIFRAS ILUSTRATIVAS</small><strong>Ingresos por canal</strong></div><span>D3.JS</span></div>
+            <div class="chart-grid"><i></i><i></i><i></i></div>
+            <div class="bar-chart">
+              <div><b class="bar bar-1" data-value="Web · S/ 96,400"></b><small>Web</small></div>
+              <div><b class="bar bar-2" data-value="Tienda · S/ 72,800"></b><small>Tienda</small></div>
+              <div><b class="bar bar-3" data-value="App · S/ 53,200"></b><small>App</small></div>
+              <div><b class="bar bar-4" data-value="Marketplace · S/ 26,220"></b><small>Marketplace</small></div>
+            </div>
+            <div class="chart-tooltip" id="demo-tooltip"></div>
+          </div>
+        </div>
+        <div class="caution-note"><b>LIMITACIÓN ACTUAL</b><span>El gráfico usa la primera columna como etiqueta y elige una columna numérica; es una regla simple, no una selección libre de ejes o métricas.</span></div>
+        <span class="slide-index">16 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide" data-title="Arquitectura y despliegue" aria-hidden="true">
+        <div class="slide-heading">
+          <div><p class="eyebrow"><i></i> BLOQUE 05 · DE LA MÁQUINA LOCAL A LA DEMO</p><h2>Tres piezas colaboran.<br><span>Un comando levanta la demo.</span></h2></div>
+          <p class="heading-copy">Express sirve el frontend y la API. PostgreSQL almacena el dominio y la plataforma. Docker Compose coordina los servicios.</p>
+        </div>
+        <div class="architecture-flow">
+          <div class="architecture-node"><span>01 · CLIENTE</span><strong>Frontend estático</strong><p>HTML · CSS · JavaScript<br>Monaco Editor · D3.js</p><small>Navegador :3000</small></div>
+          <div class="architecture-arrow"><i>→</i><span>HTTP / JSON</span></div>
+          <div class="architecture-node api-node"><span>02 · SERVIDOR</span><strong>Node.js + Express</strong><p>API REST · validador SQL<br>templates · alertas</p><small>Express sirve frontend + API</small></div>
+          <div class="architecture-arrow"><i>→</i><span>SQL</span></div>
+          <div class="architecture-node db-node"><span>03 · PERSISTENCIA</span><strong>PostgreSQL 17</strong><p>Esquema de ventas<br>y tablas de la plataforma</p><small>DB :5432</small></div>
+        </div>
+        <div class="deploy-layout">
+          <div class="terminal"><small>DESDE LA RAÍZ DEL PROYECTO</small><code><i>$</i> docker compose up --build</code><span>db: healthcheck → app inicia después</span></div>
+          <div class="deploy-notes"><b>Docker Compose</b><p>Inicializa schema.sql y seed.sql; espera a que PostgreSQL esté listo antes de iniciar la aplicación.</p><p><strong>Demo local:</strong> abrir <code>http://localhost:3000</code>.</p></div>
+        </div>
+        <span class="slide-index">17 <i>/</i> 18</span>
+      </article>
+
+      <article class="slide closing" data-title="Cierre y preguntas" aria-hidden="true">
+        <div class="closing-left">
+          <p class="eyebrow"><i></i> CIERRE · CRITERIO Y APRENDIZAJES</p>
+          <h2>De la pregunta<br>a la decisión.<br><span>Sin perder el control.</span></h2>
+          <p class="closing-copy">.SQL-BI reúne conceptos del negocio, consultas expresivas, reutilización y validación. La meta es que el análisis sea más accesible sin confundir facilidad con ausencia de controles.</p>
+          <div class="success-card"><span>✓</span><div><small>CRITERIO DE ÉXITO DEL PROYECTO</small><strong>Crear un KPI nuevo en menos de 2 minutos</strong><p>Con autocompletado y templates, sin empezar desde cero.</p></div></div>
+          <button class="button button-lime replay-button" id="replay-button" type="button">Volver al inicio <b>↺</b></button>
+        </div>
+        <div class="closing-right">
+          <h3>Qué nos llevamos</h3>
+          <div class="lesson"><span>01</span><div><b>Diseñar para el dominio</b><p>La abstracción debe responder preguntas reales.</p></div></div>
+          <div class="lesson"><span>02</span><div><b>Validar en el servidor</b><p>La interfaz orienta; la API aplica la regla.</p></div></div>
+          <div class="lesson"><span>03</span><div><b>Reutilizar es parte del producto</b><p>Templates e historial preservan el trabajo analítico.</p></div></div>
+          <div class="lesson next-step"><span>↗</span><div><b>Siguiente endurecimiento</b><p>Permisos SQL de solo lectura y parámetros bind nativos.</p></div></div>
+          <div class="closing-question">¿PREGUNTAS?</div>
+        </div>
+        <span class="slide-index">18 <i>/</i> 18</span>
+      </article>
+    </section>
+
+    <footer class="deck-controls">
+      <div class="current-label"><span class="current-count" id="current-count">01</span><span class="current-divider">/</span><span id="current-title">La idea</span></div>
+      <nav class="dot-nav" id="dot-nav" aria-label="Navegación por diapositivas"></nav>
+      <div class="arrow-nav">
+        <button class="arrow-button" id="previous-button" type="button" aria-label="Diapositiva anterior">←</button>
+        <button class="arrow-button next-button" id="next-button" type="button" aria-label="Diapositiva siguiente">→</button>
+      </div>
+    </footer>
+    <div class="overview hidden" id="overview" aria-label="Índice de diapositivas"></div>
+  </main>
+  <script src="presentacion.js"></script>
+</body>
+</html>

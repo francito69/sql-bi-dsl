@@ -9,11 +9,15 @@ Proyecto 2 del curso **SW608 Lenguajes de Dominio Específico (DSL)** — UNI FI
 - **Testing**: Jest (cobertura ≥ 60% del módulo crítico).
 
 ## Estructura del Proyecto
-- `db/` — `schema.sql` y `seed.sql` (120 ventas históricas, canales, tiendas, productos, templates, versiones y alertas).
+- `db/` — `schema.sql` y `seed.sql` (10,000 ventas en 5 años, canales, tiendas, productos, templates, versiones y alertas).
 - `backend/` — API REST, parser/validador SQL, templates, versionado y motor de alertas.
 - `frontend/` — Interfaz web con Monaco Editor, biblioteca de templates, diff/rollback y gráficos D3.js.
 - `backend/tests/` — Pruebas automatizadas unitarias.
 - `docs/ENTREGABLE_DSL.md` — Bases teóricas, justificación, metamodelo UML, Gherkin/BDD y guión de demo.
+
+## Presentación Interactiva
+
+Con la aplicación en ejecución, abrir `http://localhost:3000/presentacion.html` para recorrer la presentación de 18 diapositivas, preparada para una exposición de 40 minutos. Incluye controles de teclado, índice de diapositivas y modo de pantalla completa.
 
 ## Instalación y Ejecución (`clone → install → run`)
 
