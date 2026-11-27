@@ -12,7 +12,7 @@
   <main class="deck" aria-label="Presentación del proyecto .SQL-BI">
     <header class="deck-bar">
       <a class="wordmark" href="index.html" aria-label="Volver a la aplicación .SQL-BI"><span>.</span>SQL-BI</a>
-      <div class="deck-context"><i></i> EXPOSICIÓN · SW608 · 40 MIN</div>
+      <div class="deck-context"><i></i> EXPOSICIÓN · SW608</div>
       <div class="deck-tools">
         <button class="icon-button" id="overview-toggle" type="button" aria-label="Mostrar índice de diapositivas" title="Índice">▦</button>
         <button class="icon-button" id="fullscreen-toggle" type="button" aria-label="Activar pantalla completa" title="Pantalla completa">⛶</button>
@@ -36,23 +36,7 @@
           <div class="float-card card-channel"><i>✓</i><strong>Solo lectura</strong><small>SELECT permitido</small></div>
           <div class="float-card card-safe"><span>10 000</span><small>VENTAS SINTÉTICAS</small></div>
         </div>
-        <span class="slide-index">01 <i>/</i> 18</span>
-      </article>
-
-      <article class="slide" data-title="Ruta de la exposición" aria-hidden="true">
-        <div class="slide-heading">
-          <div><p class="eyebrow"><i></i> HOY · 40 MINUTOS</p><h2>Una pregunta, cinco capas<br><span>y una demostración completa.</span></h2></div>
-          <p class="heading-copy">La historia recorre el problema, los datos, las reglas y la experiencia. Cada bloque termina con algo concreto que podemos observar en el código o en la aplicación.</p>
-        </div>
-        <div class="agenda-grid">
-          <div class="agenda-card"><span>01</span><strong>El lenguaje</strong><p>Qué es el DSL, qué abstrae y cómo se especifica.</p><small>7 MIN</small></div>
-          <div class="agenda-card"><span>02</span><strong>Los datos</strong><p>El modelo retail y el autocompletado desde PostgreSQL.</p><small>7 MIN</small></div>
-          <div class="agenda-card"><span>03</span><strong>La protección</strong><p>Parser AST, validación en servidor y pruebas.</p><small>7 MIN</small></div>
-          <div class="agenda-card"><span>04</span><strong>La reutilización</strong><p>Templates, revisiones y evaluación de alertas.</p><small>7 MIN</small></div>
-          <div class="agenda-card"><span>05</span><strong>La experiencia</strong><p>Modos de usuario, visualización y despliegue.</p><small>7 MIN</small></div>
-        </div>
-        <div class="agenda-footer"><span>APERTURA</span><b>3 MIN</b><i>+</i><span>5 BLOQUES TEMÁTICOS</span><b>35 MIN</b><i>+</i><span>CIERRE</span><b>2 MIN = 40 MIN</b><small>Los bloques incluyen su demostración.</small></div>
-        <span class="slide-index">02 <i>/</i> 18</span>
+        <span class="slide-index">01 <i>/</i> 17</span>
       </article>
 
       <article class="slide" data-title="Qué es un DSL" aria-hidden="true">
@@ -73,7 +57,7 @@
           </div>
         </div>
         <div class="takeaway"><b>IDEA CLAVE</b><span>El DSL no es “otro SQL”: es SQL contextualizado y restringido para este caso de negocio.</span></div>
-        <span class="slide-index">03 <i>/</i> 18</span>
+        <span class="slide-index">02 <i>/</i> 17</span>
       </article>
 
       <article class="slide" data-title="Por qué SQL" aria-hidden="true">
@@ -108,7 +92,7 @@
           </section>
         </div>
         <div class="principle-strip"><span>MENOS CÓDIGO IMPERATIVO</span><span>CONSULTA REUTILIZABLE</span><span>PLAN DE EJECUCIÓN A CARGO DE POSTGRESQL</span></div>
-        <span class="slide-index">04 <i>/</i> 18</span>
+        <span class="slide-index">03 <i>/</i> 17</span>
       </article>
 
       <article class="slide" data-title="Metamodelo y requisitos" aria-hidden="true">
@@ -130,7 +114,7 @@
           <div><small>US-02 · TEMPLATE</small><p><b>Given</b> un rango de fechas, <b>When</b> se ejecuta la plantilla, <b>Then</b> se muestran tabla y gráfico.</p></div>
           <div><small>US-03 · VERSIONADO</small><p><b>Given</b> varias revisiones, <b>When</b> se restaura v1, <b>Then</b> el editor recupera su SQL.</p></div>
         </div>
-        <span class="slide-index">05 <i>/</i> 18</span>
+        <span class="slide-index">04 <i>/</i> 17</span>
       </article>
 
       <article class="slide" data-title="Modelo de datos retail" aria-hidden="true">
@@ -150,7 +134,7 @@
           </svg>
         </div>
         <div class="takeaway"><b>LECTURA DEL MODELO</b><span>Una venta se relaciona con un canal y un cliente; una venta puede tener varios detalles, cada uno vinculado a un producto.</span></div>
-        <span class="slide-index">06 <i>/</i> 18</span>
+        <span class="slide-index">05 <i>/</i> 17</span>
       </article>
 
       <article class="slide" data-title="Dataset y datos semilla" aria-hidden="true">
@@ -168,7 +152,7 @@
           </div>
         </div>
         <div class="takeaway"><b>AL EXPLICAR</b><span>El volumen y las distribuciones son datos de prueba generados; el valor está en poder ensayar consultas representativas, no en simular una empresa real.</span></div>
-        <span class="slide-index">07 <i>/</i> 18</span>
+        <span class="slide-index">06 <i>/</i> 17</span>
       </article>
 
       <article class="slide" data-title="Information schema y autocompletado" aria-hidden="true">
@@ -188,7 +172,7 @@
           <div class="suggestion-list"><div><span>▦</span><strong>ventas</strong><small>Tabla</small></div><div class="selected"><span>⌗</span><strong>ventas.total</strong><small>numeric</small></div><div><span>⌗</span><strong>ventas.fecha</strong><small>timestamp</small></div></div>
           <p>DEMO: abrir el editor, escribir <code>SELECT </code> y mostrar tablas y campos sugeridos.</p>
         </div>
-        <span class="slide-index">08 <i>/</i> 18</span>
+        <span class="slide-index">07 <i>/</i> 17</span>
       </article>
 
       <article class="slide" data-title="Validación con parser AST" aria-hidden="true">
@@ -211,7 +195,7 @@
           <div class="example-blocked"><span>BLOQUEADA</span><code>SELECT ...; DROP TABLE ...;</code><b>×</b></div>
         </div>
         <div class="caution-note"><b>ALCANCE</b><span>Es una barrera de aplicación para el tipo de sentencia; en un despliegue real conviene sumar un usuario de base de datos con permisos de solo lectura.</span></div>
-        <span class="slide-index">09 <i>/</i> 18</span>
+        <span class="slide-index">08 <i>/</i> 17</span>
       </article>
 
       <article class="slide" data-title="Validación en cliente y servidor" aria-hidden="true">
@@ -231,7 +215,7 @@
           </div>
         </div>
         <div class="takeaway"><b>SECUENCIA</b><span>Enviar consulta → renderizar parámetros → validar → ejecutar únicamente si el resultado es válido.</span></div>
-        <span class="slide-index">10 <i>/</i> 18</span>
+        <span class="slide-index">09 <i>/</i> 17</span>
       </article>
 
       <article class="slide" data-title="Pruebas automatizadas" aria-hidden="true">
@@ -249,7 +233,7 @@
           </div>
         </div>
         <div class="demo-callout"><b>DEMO EN VIVO</b><span>Escribir <code>DELETE FROM ventas;</code> y después intentar ejecutarla. Mostrar el rechazo en el editor y la respuesta del backend.</span></div>
-        <span class="slide-index">11 <i>/</i> 18</span>
+        <span class="slide-index">10 <i>/</i> 17</span>
       </article>
 
       <article class="slide" data-title="Templates parametrizables" aria-hidden="true">
@@ -275,7 +259,7 @@
           </div>
         </div>
         <div class="caution-note"><b>NOTA TÉCNICA</b><span>Los placeholders se sustituyen en la aplicación y se escapan comillas simples; no son parámetros bind nativos de PostgreSQL. El SQL resultante vuelve a validarse.</span></div>
-        <span class="slide-index">12 <i>/</i> 18</span>
+        <span class="slide-index">11 <i>/</i> 17</span>
       </article>
 
       <article class="slide" data-title="Versionado y rollback" aria-hidden="true">
@@ -292,7 +276,7 @@
           <div class="rollback-card"><span>ROLLBACK</span><strong>Restaurar v1</strong><p>El endpoint busca la revisión, actualiza <code>version_actual</code> y devuelve el SQL restaurado.</p><div class="rollback-arrow">v3 <i>→</i> v1</div><small>El frontend coloca el SQL recuperado en el editor y vuelve a cargar la lista.</small></div>
         </div>
         <div class="api-strip"><span>GET /api/queries</span><i>lista</i><span>GET /api/queries/:id/versions</span><i>historial</i><span>POST /api/queries/:id/rollback</span><i>restaurar</i></div>
-        <span class="slide-index">13 <i>/</i> 18</span>
+        <span class="slide-index">12 <i>/</i> 17</span>
       </article>
 
       <article class="slide" data-title="Motor de alertas SQL" aria-hidden="true">
@@ -314,7 +298,7 @@
           <div class="alert-frequency"><span>node-cron</span><strong>Cada 5 minutos</strong></div>
         </div>
         <div class="caution-note"><b>DETALLE DE IMPLEMENTACIÓN</b><span>El scheduler actual corre con una frecuencia fija de 5 minutos. intervalo_cron se almacena, pero no se usa para programar cada alerta individualmente.</span></div>
-        <span class="slide-index">14 <i>/</i> 18</span>
+        <span class="slide-index">13 <i>/</i> 17</span>
       </article>
 
       <article class="slide" data-title="Modos de trabajo" aria-hidden="true">
@@ -336,7 +320,7 @@
           </div>
         </div>
         <div class="demo-callout"><b>DEMO</b><span>Cambiar entre ambos modos. En Negocio seleccionar “Ventas por Canal en Rango”, ajustar fechas y generar el reporte.</span></div>
-        <span class="slide-index">15 <i>/</i> 18</span>
+        <span class="slide-index">14 <i>/</i> 17</span>
       </article>
 
       <article class="slide" data-title="Resultados y visualización" aria-hidden="true">
@@ -363,7 +347,7 @@
           </div>
         </div>
         <div class="caution-note"><b>LIMITACIÓN ACTUAL</b><span>El gráfico usa la primera columna como etiqueta y elige una columna numérica; es una regla simple, no una selección libre de ejes o métricas.</span></div>
-        <span class="slide-index">16 <i>/</i> 18</span>
+        <span class="slide-index">15 <i>/</i> 17</span>
       </article>
 
       <article class="slide" data-title="Arquitectura y despliegue" aria-hidden="true">
@@ -382,7 +366,7 @@
           <div class="terminal"><small>DESDE LA RAÍZ DEL PROYECTO</small><code><i>$</i> docker compose up --build</code><span>db: healthcheck → app inicia después</span></div>
           <div class="deploy-notes"><b>Docker Compose</b><p>Inicializa schema.sql y seed.sql; espera a que PostgreSQL esté listo antes de iniciar la aplicación.</p><p><strong>Demo local:</strong> abrir <code>http://localhost:3000</code>.</p></div>
         </div>
-        <span class="slide-index">17 <i>/</i> 18</span>
+        <span class="slide-index">16 <i>/</i> 17</span>
       </article>
 
       <article class="slide closing" data-title="Cierre y preguntas" aria-hidden="true">
@@ -401,7 +385,7 @@
           <div class="lesson next-step"><span>↗</span><div><b>Siguiente endurecimiento</b><p>Permisos SQL de solo lectura y parámetros bind nativos.</p></div></div>
           <div class="closing-question">¿PREGUNTAS?</div>
         </div>
-        <span class="slide-index">18 <i>/</i> 18</span>
+        <span class="slide-index">17 <i>/</i> 17</span>
       </article>
     </section>
 
