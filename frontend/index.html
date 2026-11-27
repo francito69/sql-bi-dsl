@@ -63,7 +63,7 @@
       <div id="business-banner" class="business-banner hidden">
         <div>
           <strong>Vista Ejecutiva (Modo Negocio)</strong>
-          <p class="meta-text">Selecciona un template a la izquierda, ajusta los filtros y presiona <strong>Ejecutar</strong>.</p>
+          <p class="meta-text">Selecciona un template a la izquierda, ajusta los filtros y presiona <strong>▶ Generar Reporte</strong>.</p>
         </div>
         <button id="btn-run-business" class="btn btn-primary">▶ Generar Reporte</button>
       </div>
@@ -119,6 +119,7 @@
         <button id="btn-close-alert" class="btn btn-small">✕</button>
       </div>
       <form id="form-alert" class="form-grid">
+        <div id="alert-form-error" class="error-banner hidden"></div>
         <input id="alert-name" placeholder="Nombre de la alerta" required />
         <textarea id="alert-sql" rows="3" placeholder="SELECT COUNT(*) AS valor FROM ventas WHERE estado = 'anulada';" required></textarea>
         <div class="row-2">

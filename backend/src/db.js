@@ -13,4 +13,31 @@ const pool = new Pool(
       }
 );
 
-module.exports = { pool };
+/**
+ * Ejecuta una consulta SQL dentro de una transacción estrictamente READ ONLY
+ * con límite de tiempo (statement_timeout) en PostgreSQL.
+ * @param {string} sql
+ * @param {number} [timeoutMs=5000]
+ */
+async function executeReadOnlyQuery(sql, timeoutMs = 5000) {
+  const safeTimeout = Math.max(100, Math.trunc(Number(timeoutMs) || 5000));
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN READ ONLY');
+    await client.query(`SET LOCAL statement_timeout = ${safeTimeout}`);
+    const result = await client.query(sql);
+    await client.query('COMMIT');
+    return result;
+  } catch (err) {
+    try {
+      await client.query('ROLLBACK');
+    } catch (_) {
+      // ignorar error secundario en rollback
+    }
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+module.exports = { pool, executeReadOnlyQuery };
