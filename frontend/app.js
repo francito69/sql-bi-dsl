@@ -59,6 +59,15 @@ require(['vs/editor/editor.main'], async () => {
   executeQuery();
 });
 
+function showToast(msg, type = 'ok') {
+  const container = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  container.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
 async function loadSchema() {
   const res = await fetch('/api/schema');
   const data = await res.json();
@@ -329,6 +338,13 @@ async function loadAlerts() {
     list.appendChild(div);
   });
 }
+
+document.getElementById('schema-search').oninput = (e) => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll('#schema-tree .list-item').forEach((el) => {
+    el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+};
 
 document.getElementById('btn-run').onclick = executeQuery;
 document.getElementById('btn-run-business').onclick = executeQuery;

@@ -31,6 +31,7 @@
     <aside class="sidebar">
       <section class="panel analyst-only">
         <h3>Esquema (information_schema)</h3>
+        <input id="schema-search" class="search-input" placeholder="Buscar tabla..." />
         <div id="schema-tree" class="list-box">Cargando esquema...</div>
       </section>
 
@@ -90,7 +91,14 @@
               <select id="chart-type">
                 <option value="bar">Barras (D3)</option>
                 <option value="line">Línea (D3)</option>
+                <option value="donut">Donut (D3)</option>
               </select>
+            </label>
+            <label style="margin-left:12px;">Eje X:
+              <select id="chart-x"></select>
+            </label>
+            <label style="margin-left:12px;">Eje Y:
+              <select id="chart-y"></select>
             </label>
           </div>
           <div id="d3-chart"></div>
@@ -137,6 +145,7 @@
     </div>
   </div>
 
+  <div id="toast-container" class="toast-container"></div>
   <script src="app.js"></script>
 </body>
 </html>
